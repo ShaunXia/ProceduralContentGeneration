@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -24,4 +25,15 @@ public class TestIndividual
 		}
 	}
 
+	@Test
+	public void copyConstructor()
+	{
+		Individual x = new Individual();
+		Individual y = new Individual(x);
+		assertEquals(x.getShapes().size(), y.getShapes().size());
+		ColoredShape x1 = x.getShapes().get(1);
+		ColoredShape y1 = y.getShapes().get(1);
+		assertEquals(x1,y1);
+		assertNotSame(x1,y1);
+	}
 }

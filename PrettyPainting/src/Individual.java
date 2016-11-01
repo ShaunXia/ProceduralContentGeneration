@@ -25,6 +25,30 @@ public class Individual implements Comparable<Individual>
 		fitness = calculateFitness();
 	}
 
+	public Individual(Individual guyToCopy)
+	{
+		shapes = new ArrayList<ColoredShape>(guyToCopy.shapes.size());
+		for(ColoredShape s: guyToCopy.shapes) {
+		    shapes.add( new ColoredShape(s));
+		}
+		fitness = calculateFitness();
+	}
+	public Individual(Individual mom, Individual dad)
+	{
+		int shapesFromMom = mom.shapes.size()/2;
+		int shapesFromDad = dad.shapes.size()/2;
+		shapes = new ArrayList<ColoredShape>(shapesFromMom + shapesFromDad);
+		for (int i=0;i<shapesFromMom;i++)
+		{
+			shapes.add(mom.getShapes().get(i));
+		}
+		for (int i=shapesFromDad; i<dad.shapes.size();i++)
+		{
+			shapes.add(dad.getShapes().get(i));
+		}
+		fitness = calculateFitness();
+	}
+
 	private int calculateFitness()
 	{
 		return (int) (Math.random() * 100);
@@ -77,6 +101,27 @@ public class Individual implements Comparable<Individual>
 		return fitness;
 	}
 
+	public void mutate()
+	{
+		if (Math.random() >= 0.8)
+		{
+			int number = (int)(Math.random() * shapes.size());
+			ColoredShape s = shapes.get(number);
+			double optionPicker = Math.random();
+			if (optionPicker<0.5)
+			{
+				s.setColor(getRandomColor());
+			} 
+			else
+			{
+				shapes.remove(number);
+			}
+		} else
+		{
+			shapes.add(createRandomShape());
+		}
+		fitness = calculateFitness();
+	}
 	@Override
 	public int compareTo(Individual arg0)
 	{

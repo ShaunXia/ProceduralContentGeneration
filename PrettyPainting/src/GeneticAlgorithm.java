@@ -25,15 +25,62 @@ public class GeneticAlgorithm
 		// pick a few individuals, copy them, mutate the copy and add it to the
 		// population
 		fillPopulation();
+
 	}
 
 	private void fillPopulation()
 	{
 		while (individuals.size() < POPULATION_SIZE)
 		{
-			individuals.add(new Individual());
+			if (Math.random() < 0.33)
+			{
+				if (Math.random() < 0.5)
+				{
+					Individual newGuy = new Individual(pickRandomIndividual());
+					newGuy.mutate();
+					individuals.add(newGuy);
+				} else
+				{
+					Individual mom = pickRandomIndividual();
+					Individual dad = pickRandomIndividual();
+					while (mom == dad)
+					{
+						dad = pickRandomIndividual();
+					}
+					individuals.add(new Individual(pickRandomIndividual(),
+							pickRandomIndividual()));
+				}
+			} else
+			{
+				individuals.add(new Individual());
+			}
 		}
 		Collections.sort(individuals);
+	}
+
+	private Individual pickRandomIndividual()
+	{
+		int totalFitness = calculateTotalFitness();
+		int target = (int) (Math.random() * totalFitness);
+		int fitnessSoFar = individuals.get(0).getFitness();
+		int currentIndividual = 0;
+		while (fitnessSoFar < target)
+		{
+			currentIndividual++;
+			fitnessSoFar = fitnessSoFar
+					+ individuals.get(currentIndividual).getFitness();
+		}
+		return individuals.get(currentIndividual);
+	}
+
+	private int calculateTotalFitness()
+	{
+		int sum = 0;
+		for (Individual i : individuals)
+		{
+			sum = sum + i.getFitness();
+		}
+		return sum;
 	}
 
 	private void trimPopulation()
