@@ -10,10 +10,10 @@ public class Runner extends PApplet
 
 	private static final int SPACE = 50;
 
-	private static final int SCREEN_WIDTH = 3 * Individual.INDIVIDUAL_WIDTH + 2
+	private static final int SCREEN_WIDTH = 3 * Individual.INDIVIDUAL_WIDTH + 3
 			* SPACE;
 	private static final int SCREEN_HEIGHT = 3 * Individual.INDIVIDUAL_HEIGHT
-			+ 2 * SPACE;
+			+ 3 * SPACE;
 	GeneticAlgorithm alg;
 
 	public void setup()
@@ -36,7 +36,7 @@ public class Runner extends PApplet
 
 	private void drawArt()
 	{
-		background(0xCCFFFF);
+		background(0xFFFFFF);
 		for (int i = 0; i < GeneticAlgorithm.POPULATION_SIZE; i++)
 		{
 			Individual x = alg.getIndividual(i);
@@ -61,7 +61,9 @@ public class Runner extends PApplet
 		int yOffset = row * (Individual.INDIVIDUAL_HEIGHT + SPACE);
 		drawABox(xOffset, yOffset, Individual.INDIVIDUAL_WIDTH,
 				Individual.INDIVIDUAL_HEIGHT, Color.WHITE);
+		
 		ArrayList<ColoredShape> things = x.getShapes();
+
 		for (ColoredShape coloredShape : things)
 		{
 			if (coloredShape.getShape().getClass() == java.awt.Rectangle.class)
@@ -70,6 +72,7 @@ public class Runner extends PApplet
 				drawABox(xOffset + s.x, yOffset + s.y, s.width, s.height,
 						coloredShape.getColor());
 			}
+			
 			if (coloredShape.getShape().getClass() == java.awt.geom.Ellipse2D.Float.class)
 			{
 				Ellipse2D.Float s = (Ellipse2D.Float) coloredShape.getShape();
@@ -78,6 +81,7 @@ public class Runner extends PApplet
 						coloredShape.getColor());
 			}
 		}
+
 	}
 
 	private void drawABox(float x, float y, float boxWidth, float boxHeight,
