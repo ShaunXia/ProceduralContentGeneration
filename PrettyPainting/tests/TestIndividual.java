@@ -2,7 +2,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.Shape;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ public class TestIndividual
 	{
 		Individual x = new Individual();
 		int howMany = x.getNumberOfShapes();
-		ArrayList<Shape> shapes = x.getShapes();
+		ArrayList<ColoredShape> shapes = x.getShapes();
 		assertTrue(howMany>=1);
 		assertEquals(howMany, shapes.size());
 		for (int i=0;i<howMany;i++)

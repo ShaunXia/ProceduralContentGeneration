@@ -1,28 +1,24 @@
+import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-
-
 
 public class Individual implements Comparable<Individual>
 {
+	static final int INDIVIDUAL_WIDTH = 300;
+	static final int INDIVIDUAL_HEIGHT = 300;
 
-	private static int SCREEN_WIDTH = 1024;
-	private static int SCREEN_HEIGHT = 760;
-	
-	private ArrayList<Shape> shapes;
+	private ArrayList<ColoredShape> shapes;
 	private int fitness;
-	
+
 	/**
 	 * Create a random individual
 	 */
 	public Individual()
 	{
-		int numShapes = (int)(Math.random()*25 + 1);
-		shapes = new ArrayList<Shape>();
-		for (int i=0; i<numShapes; i++)
+		int numShapes = (int) (Math.random() * 25 + 1);
+		shapes = new ArrayList<ColoredShape>();
+		for (int i = 0; i < numShapes; i++)
 		{
 			shapes.add(createRandomShape());
 		}
@@ -31,26 +27,34 @@ public class Individual implements Comparable<Individual>
 
 	private int calculateFitness()
 	{
-		return (int)(Math.random()*100);
+		return (int) (Math.random() * 100);
 	}
 
-	private Shape createRandomShape()
+	private ColoredShape createRandomShape()
 	{
 		if (Math.random() < .75)
 		{
-			int left = (int)(Math.random()*SCREEN_WIDTH);
-			int top = (int) (Math.random()*SCREEN_HEIGHT);
-			int width = (int) (Math.random()*(SCREEN_WIDTH-left)+1);
-			int height = (int) (Math.random()*(SCREEN_HEIGHT-top)+1);
-			return new Rectangle(left, top, width, height);
+			int left = (int) (Math.random() * INDIVIDUAL_WIDTH);
+			int top = (int) (Math.random() * INDIVIDUAL_HEIGHT);
+			int width = (int) (Math.random() * (INDIVIDUAL_WIDTH - left) + 1);
+			int height = (int) (Math.random() * (INDIVIDUAL_HEIGHT - top) + 1);
+			return new ColoredShape(getRandomColor(), new Rectangle(left, top,
+					width, height));
 		} else
 		{
-			int left = (int)(Math.random()*SCREEN_WIDTH);
-			int top = (int) (Math.random()*SCREEN_HEIGHT);
-			int width = (int) (Math.random()*(SCREEN_WIDTH-left)+1);
-			int height = (int) (Math.random()*(SCREEN_HEIGHT-top)+1);
-			return new Ellipse2D.Float(left, top, width, height);
+			int left = (int) (Math.random() * INDIVIDUAL_WIDTH);
+			int top = (int) (Math.random() * INDIVIDUAL_HEIGHT);
+			int width = (int) (Math.random() * (INDIVIDUAL_WIDTH - left) + 1);
+			int height = (int) (Math.random() * (INDIVIDUAL_HEIGHT - top) + 1);
+			return new ColoredShape(getRandomColor(), new Ellipse2D.Float(left,
+					top, width, height));
 		}
+	}
+
+	private Color getRandomColor()
+	{
+		return new Color((int) (Math.random() * 255),
+				(int) (Math.random() * 255), (int) (Math.random() * 255));
 	}
 
 	public int getNumberOfShapes()
@@ -60,9 +64,10 @@ public class Individual implements Comparable<Individual>
 
 	public String toString()
 	{
-		return ""+fitness;
+		return "" + fitness;
 	}
-	public ArrayList<Shape> getShapes()
+
+	public ArrayList<ColoredShape> getShapes()
 	{
 		return shapes;
 	}
@@ -78,15 +83,14 @@ public class Individual implements Comparable<Individual>
 		if (fitness < arg0.fitness)
 		{
 			return 1;
-		}
-		else if (fitness == arg0.fitness)
+		} else if (fitness == arg0.fitness)
 		{
 			return 0;
 		} else
 		{
 			return -1;
 		}
-			
+
 	}
 
 }
