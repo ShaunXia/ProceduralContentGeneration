@@ -18,6 +18,7 @@ public class Individual implements Comparable<Individual>
 	{
 
 		shapes = new ArrayList<ColoredShape>();
+
 		if (Math.random() < 0.5)
 		{
 			int numShapes = (int) (Math.random() * 25 + 1);
@@ -31,7 +32,12 @@ public class Individual implements Comparable<Individual>
 			shapes.add(createRandomShapePattern(INDIVIDUAL_WIDTH / 2,
 					INDIVIDUAL_WIDTH / 2, (int) (INDIVIDUAL_WIDTH / 2.5),
 					(int) (Math.random() * 3)));
+			createRandomShapePattern(INDIVIDUAL_WIDTH / 2, INDIVIDUAL_WIDTH / 2,
+					(int) (INDIVIDUAL_WIDTH / 2.5), (int) (Math.random() * 3) + 1);
 		}
+
+		
+
 		fitness = calculateFitness();
 	}
 
@@ -115,10 +121,7 @@ public class Individual implements Comparable<Individual>
 					(int) (radius / 2), new_num));
 		}
 
-		// return new ColoredShape(getRandomColor(), new Rectangle(x, y,
-		// radius, radius));
-
-		if (Math.random() < .75)
+		if (Math.random() < .5)
 		{
 			return new ColoredShape(getRandomColor(), new Rectangle(x, y,
 					radius, radius));
