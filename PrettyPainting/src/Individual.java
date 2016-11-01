@@ -16,34 +16,45 @@ public class Individual implements Comparable<Individual>
 	 */
 	public Individual()
 	{
-		int numShapes = (int) (Math.random() * 25 + 1);
+
 		shapes = new ArrayList<ColoredShape>();
-//		for (int i = 0; i < numShapes; i++)
-//		{
-//			shapes.add(createRandomShape());
-//		}
-		shapes.add(createRandomShapePattern(INDIVIDUAL_WIDTH/2,INDIVIDUAL_WIDTH/2,(int)(INDIVIDUAL_WIDTH/2.5),(int) (Math.random() * 3)));
+		if (Math.random() < 0.5)
+		{
+			int numShapes = (int) (Math.random() * 25 + 1);
+			for (int i = 0; i < numShapes; i++)
+			{
+				shapes.add(createRandomShape());
+			}
+		} else
+		{
+
+			shapes.add(createRandomShapePattern(INDIVIDUAL_WIDTH / 2,
+					INDIVIDUAL_WIDTH / 2, (int) (INDIVIDUAL_WIDTH / 2.5),
+					(int) (Math.random() * 3)));
+		}
 		fitness = calculateFitness();
 	}
 
 	public Individual(Individual guyToCopy)
 	{
 		shapes = new ArrayList<ColoredShape>(guyToCopy.shapes.size());
-		for(ColoredShape s: guyToCopy.shapes) {
-		    shapes.add( new ColoredShape(s));
+		for (ColoredShape s : guyToCopy.shapes)
+		{
+			shapes.add(new ColoredShape(s));
 		}
 		fitness = calculateFitness();
 	}
+
 	public Individual(Individual mom, Individual dad)
 	{
-		int shapesFromMom = mom.shapes.size()/2;
-		int shapesFromDad = dad.shapes.size()/2;
+		int shapesFromMom = mom.shapes.size() / 2;
+		int shapesFromDad = dad.shapes.size() / 2;
 		shapes = new ArrayList<ColoredShape>(shapesFromMom + shapesFromDad);
-		for (int i=0;i<shapesFromMom;i++)
+		for (int i = 0; i < shapesFromMom; i++)
 		{
 			shapes.add(mom.getShapes().get(i));
 		}
-		for (int i=shapesFromDad; i<dad.shapes.size();i++)
+		for (int i = shapesFromDad; i < dad.shapes.size(); i++)
 		{
 			shapes.add(dad.getShapes().get(i));
 		}
@@ -75,46 +86,48 @@ public class Individual implements Comparable<Individual>
 					top, width, height));
 		}
 	}
-	
+
 	// To generate pattern.
-	private ColoredShape createRandomShapePattern(int x,int y, int radius,int num)
+	private ColoredShape createRandomShapePattern(int x, int y, int radius,
+			int num)
 	{
-		
-		
-		
-	    int new_x, new_y;
-	    int new_num;
-		 if (num > 0) {
-		      new_num = num-1;
-		      new_x = x;
-		      new_y = y-radius/2;
-		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
-		      new_x = x +radius/2;
-		      new_y = y ;
-		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
-		      new_x = x;
-		      new_y = y +radius/2;
-		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
-		      new_x = x-radius/2;
-		      new_y = y;
-		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
-		    }
-		
-//			 return new ColoredShape(getRandomColor(), new Rectangle(x, y,
-//						radius, radius));
-		 
-		 
+
+		int new_x, new_y;
+		int new_num;
+		if (num > 0)
+		{
+			new_num = num - 1;
+			new_x = x;
+			new_y = y - radius / 2;
+			shapes.add(createRandomShapePattern(new_x, new_y,
+					(int) (radius / 2), new_num));
+			new_x = x + radius / 2;
+			new_y = y;
+			shapes.add(createRandomShapePattern(new_x, new_y,
+					(int) (radius / 2), new_num));
+			new_x = x;
+			new_y = y + radius / 2;
+			shapes.add(createRandomShapePattern(new_x, new_y,
+					(int) (radius / 2), new_num));
+			new_x = x - radius / 2;
+			new_y = y;
+			shapes.add(createRandomShapePattern(new_x, new_y,
+					(int) (radius / 2), new_num));
+		}
+
+		// return new ColoredShape(getRandomColor(), new Rectangle(x, y,
+		// radius, radius));
+
 		if (Math.random() < .75)
 		{
 			return new ColoredShape(getRandomColor(), new Rectangle(x, y,
 					radius, radius));
 		} else
 		{
-			return new ColoredShape(getRandomColor(), new Ellipse2D.Float(x,
-					y, radius, radius));
+			return new ColoredShape(getRandomColor(), new Ellipse2D.Float(x, y,
+					radius, radius));
 		}
 	}
-	
 
 	private Color getRandomColor()
 	{
@@ -146,14 +159,13 @@ public class Individual implements Comparable<Individual>
 	{
 		if (Math.random() >= 0.8)
 		{
-			int number = (int)(Math.random() * shapes.size());
+			int number = (int) (Math.random() * shapes.size());
 			ColoredShape s = shapes.get(number);
 			double optionPicker = Math.random();
-			if (optionPicker<0.5)
+			if (optionPicker < 0.5)
 			{
 				s.setColor(getRandomColor());
-			} 
-			else
+			} else
 			{
 				shapes.remove(number);
 			}
@@ -163,6 +175,7 @@ public class Individual implements Comparable<Individual>
 		}
 		fitness = calculateFitness();
 	}
+
 	@Override
 	public int compareTo(Individual arg0)
 	{
@@ -178,7 +191,5 @@ public class Individual implements Comparable<Individual>
 		}
 
 	}
-	
-	
 
 }

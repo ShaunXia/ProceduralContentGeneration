@@ -4,7 +4,7 @@ import java.util.Collections;
 public class GeneticAlgorithm
 {
 	private static final int NUM_GENERATIONS = 100;
-	static int POPULATION_SIZE = 9;
+	static int POPULATION_SIZE = 12;
 	private static int PERCENT_TO_TRIM = 30;
 	private static ArrayList<Individual> individuals;
 

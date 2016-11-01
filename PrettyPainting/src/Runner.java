@@ -10,7 +10,7 @@ public class Runner extends PApplet
 
 	private static final int SPACE = 50;
 
-	private static final int SCREEN_WIDTH = 3 * Individual.INDIVIDUAL_WIDTH + 3
+	private static final int SCREEN_WIDTH = 4 * Individual.INDIVIDUAL_WIDTH + 4
 			* SPACE;
 	private static final int SCREEN_HEIGHT = 3 * Individual.INDIVIDUAL_HEIGHT
 			+ 3 * SPACE;
@@ -36,18 +36,18 @@ public class Runner extends PApplet
 
 	private void drawArt()
 	{
-		background(0xFFFFFF);
+		background(0xCCFFFF);
 		for (int i = 0; i < GeneticAlgorithm.POPULATION_SIZE; i++)
 		{
 			Individual x = alg.getIndividual(i);
 
-			int row = i / 3;
-			int column = i % 3;
+			int row = i / 4;
+			int column = i % 4;
 			drawIndividual(x, row, column);
 		}
 		try
 		{
-			Thread.sleep(6000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
