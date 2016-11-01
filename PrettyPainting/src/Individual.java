@@ -22,7 +22,7 @@ public class Individual implements Comparable<Individual>
 //		{
 //			shapes.add(createRandomShape());
 //		}
-		shapes.add(createRandomShapePattern(INDIVIDUAL_WIDTH/2,INDIVIDUAL_WIDTH/2,(int)(INDIVIDUAL_WIDTH/2.5),(int) (Math.random() * 3)));
+		createRandomShapePattern(INDIVIDUAL_WIDTH/2,INDIVIDUAL_WIDTH/2,(int)(INDIVIDUAL_WIDTH/2.5),(int) (Math.random() * 3)+1);
 		fitness = calculateFitness();
 	}
 
@@ -99,12 +99,8 @@ public class Individual implements Comparable<Individual>
 		      new_y = y;
 		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
 		    }
-		
-//			 return new ColoredShape(getRandomColor(), new Rectangle(x, y,
-//						radius, radius));
-		 
-		 
-		if (Math.random() < .75)
+
+		if (Math.random() < .5)
 		{
 			return new ColoredShape(getRandomColor(), new Rectangle(x, y,
 					radius, radius));
