@@ -18,10 +18,11 @@ public class Individual implements Comparable<Individual>
 	{
 		int numShapes = (int) (Math.random() * 25 + 1);
 		shapes = new ArrayList<ColoredShape>();
-		for (int i = 0; i < numShapes; i++)
-		{
-			shapes.add(createRandomShape());
-		}
+//		for (int i = 0; i < numShapes; i++)
+//		{
+//			shapes.add(createRandomShape());
+//		}
+		shapes.add(createRandomShapePattern(INDIVIDUAL_WIDTH/2,INDIVIDUAL_WIDTH/2,(int)(INDIVIDUAL_WIDTH/2.5),(int) (Math.random() * 3)));
 		fitness = calculateFitness();
 	}
 
@@ -74,6 +75,46 @@ public class Individual implements Comparable<Individual>
 					top, width, height));
 		}
 	}
+	
+	// To generate pattern.
+	private ColoredShape createRandomShapePattern(int x,int y, int radius,int num)
+	{
+		
+		
+		
+	    int new_x, new_y;
+	    int new_num;
+		 if (num > 0) {
+		      new_num = num-1;
+		      new_x = x;
+		      new_y = y-radius/2;
+		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
+		      new_x = x +radius/2;
+		      new_y = y ;
+		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
+		      new_x = x;
+		      new_y = y +radius/2;
+		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
+		      new_x = x-radius/2;
+		      new_y = y;
+		      shapes.add(createRandomShapePattern(new_x, new_y, (int)(radius/2), new_num));
+		    }
+		
+//			 return new ColoredShape(getRandomColor(), new Rectangle(x, y,
+//						radius, radius));
+		 
+		 
+		if (Math.random() < .75)
+		{
+			return new ColoredShape(getRandomColor(), new Rectangle(x, y,
+					radius, radius));
+		} else
+		{
+			return new ColoredShape(getRandomColor(), new Ellipse2D.Float(x,
+					y, radius, radius));
+		}
+	}
+	
 
 	private Color getRandomColor()
 	{
@@ -137,5 +178,7 @@ public class Individual implements Comparable<Individual>
 		}
 
 	}
+	
+	
 
 }

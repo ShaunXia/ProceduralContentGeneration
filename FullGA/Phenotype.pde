@@ -12,7 +12,7 @@ class Phenotype {
   boolean rolloverOn; // Are we rolling over this image?
 
   Rectangle r;
-  
+
   // Create a new face
   Phenotype(DNA dna_, float x_, float y_) {
     dna = dna_;
@@ -21,25 +21,27 @@ class Phenotype {
     fitness = 1;
     // Using java.awt.Rectangle (see: http://java.sun.com/j2se/1.4.2/docs/api/java/awt/Rectangle.html)
     r = new Rectangle(int(x), int(y), int(wh), int(wh));
-
   }
 
   // Display the face
   void display() {
-    
-    colorMode(RGB,255);  // because this project set colorMode as 0 to 1 , so I change back to 0-255, since pattern use 0-255 mode
-   // when I rewrite this code, I will fix this.
-   
+
+    colorMode(RGB, 255);  // because this project set colorMode as 0 to 1 , so I change back to 0-255, since pattern use 0-255 mode
+    // when I rewrite this code, I will fix this.
+
     pushMatrix();
     translate(x, y);  //since we have 6 image, this translate real x,y in screen to 0,0 make sure we can show images in one window.  
     noStroke();
+
+    //ColorSquares sq=new ColorSquares(dna); // pass dna to pattern class and draw random image from the dna.
+    //sq.display();  // display image.
     
-    ColorSquares sq=new ColorSquares(dna); // pass dna to pattern class and draw random image from the dna.
-    sq.display();  // display image.
+    PatternSquareCircle sqc = new PatternSquareCircle(dna);
+    sqc.display();
     
-    colorMode(RGB,1.0);  // change back to 0 - 1, since execpt the image, other code are use 0-1 mode.
+    colorMode(RGB, 1.0);  // change back to 0 - 1, since execpt the image, other code are use 0-1 mode.
     // when I rewrite this code, I will fix this.
-    
+
     // Draw the bounding box
     stroke(0.25);
     if (rolloverOn) fill(0, 0.25);
