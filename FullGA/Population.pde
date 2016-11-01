@@ -9,7 +9,7 @@ class Population {
   ArrayList<Phenotype> matingPool;   // ArrayList which we will use for our "mating pool"
   int generations;              // Number of generations
   int frameSize=300;
-    // Create the population
+  // Create the population
   Population(float m, int num) {
     mutationRate = m;
     population = new Phenotype[num];
