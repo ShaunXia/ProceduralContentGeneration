@@ -25,6 +25,7 @@ public class GeneticAlgorithm
 		// pick a few individuals, copy them, mutate the copy and add it to the
 		// population
 		fillPopulation();
+		System.out.println(this);
 
 	}
 
@@ -116,5 +117,10 @@ public class GeneticAlgorithm
 			result = result + " " + x;
 		}
 		return result;
+	}
+
+	public void increaseFitness(int imageNumber)
+	{
+		individuals.get(imageNumber).increaseFitness();
 	}
 }

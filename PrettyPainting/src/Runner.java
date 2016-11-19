@@ -8,13 +8,18 @@ import processing.core.PApplet;
 public class Runner extends PApplet
 {
 
+	private static final int NUMBER_OF_COLUMNS = 4;
+
+	private static final int NUMBER_OF_ROWS = 3;
+
 	private static final int SPACE = 50;
 
-	private static final int SCREEN_WIDTH = 4 * Individual.INDIVIDUAL_WIDTH + 4
+	private static final int SCREEN_WIDTH = NUMBER_OF_COLUMNS * Individual.INDIVIDUAL_WIDTH + NUMBER_OF_COLUMNS
 			* SPACE;
-	private static final int SCREEN_HEIGHT = 3 * Individual.INDIVIDUAL_HEIGHT
-			+ 3 * SPACE;
+	private static final int SCREEN_HEIGHT = NUMBER_OF_ROWS * Individual.INDIVIDUAL_HEIGHT
+			+ NUMBER_OF_ROWS * SPACE;
 	GeneticAlgorithm alg;
+	private int clickCount = 0;
 
 	public void setup()
 	{
@@ -25,9 +30,23 @@ public class Runner extends PApplet
 	public void draw()
 	{
 		drawArt();
-		alg.makeNextGeneration();
+		if (clickCount >4)
+		{
+			alg.makeNextGeneration();
+			clickCount = 0;
+		}
 	}
 
+	public void mouseClicked()
+	{
+		System.out.println("click");
+		clickCount = clickCount + 1;
+		int picRow = mouseY / Individual.INDIVIDUAL_HEIGHT;
+		int picColumn = mouseX / Individual.INDIVIDUAL_WIDTH;
+		int imageNumber = picRow*NUMBER_OF_COLUMNS + picColumn;
+		System.out.println(imageNumber);
+		alg.increaseFitness(imageNumber);
+	}
 	public void settings()
 	{
 		size(SCREEN_WIDTH, SCREEN_HEIGHT);

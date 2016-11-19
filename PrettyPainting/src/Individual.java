@@ -38,7 +38,7 @@ public class Individual implements Comparable<Individual>
 
 		
 
-		fitness = calculateFitness();
+		fitness = 0;
 	}
 
 	public Individual(Individual guyToCopy)
@@ -48,7 +48,7 @@ public class Individual implements Comparable<Individual>
 		{
 			shapes.add(new ColoredShape(s));
 		}
-		fitness = calculateFitness();
+		fitness = 0;
 	}
 
 	public Individual(Individual mom, Individual dad)
@@ -64,14 +64,10 @@ public class Individual implements Comparable<Individual>
 		{
 			shapes.add(dad.getShapes().get(i));
 		}
-		fitness = calculateFitness();
+		fitness = 0;
 	}
 
-	private int calculateFitness()
-	{
-		return (int) (Math.random() * 100);
-	}
-
+	
 	private ColoredShape createRandomShape()
 	{
 		if (Math.random() < .75)
@@ -176,7 +172,7 @@ public class Individual implements Comparable<Individual>
 		{
 			shapes.add(createRandomShape());
 		}
-		fitness = calculateFitness();
+		fitness = 0;
 	}
 
 	@Override
@@ -193,6 +189,11 @@ public class Individual implements Comparable<Individual>
 			return -1;
 		}
 
+	}
+
+	public void increaseFitness()
+	{
+		fitness = fitness+1;
 	}
 
 }
