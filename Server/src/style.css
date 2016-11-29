@@ -1,0 +1,17 @@
+body{
+
+	text-align:center;
+	margin: 0 auto;
+}
+
+#container{
+	width:80%;margin:0 auto;background:#fff;text-align:left;
+}
+
+.showimg{
+	width: 26%;
+	/*height: 30%;*/
+	margin: 20px;
+	border:1px solid #000;
+	float:left;
+}
