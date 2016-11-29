@@ -14,7 +14,7 @@ public class DataBaseUtil {
 	 {
 		 String url = "jdbc:mysql://localhost:3306/csc791_gaimage";
 		 String username = "root";
-		 String password = "root";
+		 String password = "hellomysql";
 		 try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(url, username, password);
@@ -65,19 +65,19 @@ public class DataBaseUtil {
 	}
 
 
-	public static String intArr2String(int[] input)
+	public static String floatArr2string(float[] input)
 	{
 		String resultStr= Arrays.toString(input).replaceAll("\\[|\\]| ", "");
 		return resultStr;
 	}
 
-	public static int[] string2IntArr(String input)
+	public static float[] string2floatArr(String input)
 	{
 		String[] tpst=input.split(",");
-		int[] result= new int[tpst.length];
+		float[] result= new float[tpst.length];
 		for (int i = 0; i < tpst.length; i++) {
 
-			result[i]=Integer.parseInt(tpst[i]);
+			result[i]=Float.parseFloat(tpst[i]);
 		}
 
 		return result;

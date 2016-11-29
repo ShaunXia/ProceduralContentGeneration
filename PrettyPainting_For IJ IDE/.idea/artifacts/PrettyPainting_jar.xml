@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PrettyPainting:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PrettyPainting_jar</output-path>
+    <root id="archive" name="PrettyPainting.jar">
+      <element id="module-output" name="PrettyPainting" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../PrettyPainting/libs/mysql-connector-java-5.1.40-bin.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/junit-4.12.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/core.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -17,10 +17,10 @@ public class Individual implements Comparable<Individual>, Serializable
 	
 	private ArrayList<ColoredShape> shapes;
 	private int fitness;
-	private int DNA_length = 1024;
-	private int DNA_num = 10;
-	private float[][] DNA=new float[DNA_num][DNA_length];
-
+	public int DNA_length = 50;
+	public int DNA_num = 7;
+	public float[][] DNA=new float[DNA_num][DNA_length];
+	public String imgURL="";
 	/**
 	 * Create a random individual
 	 */
@@ -60,21 +60,43 @@ public class Individual implements Comparable<Individual>, Serializable
 
 	public Individual(Individual mom, Individual dad)
 	{
-		int shapesFromMom = mom.shapes.size() / 2;
-		int shapesFromDad = dad.shapes.size() / 2;
-		shapes = new ArrayList<ColoredShape>(shapesFromMom + shapesFromDad);
-		for (int i = 0; i < shapesFromMom; i++)
-		{
-			shapes.add(mom.getShapes().get(i));
-		}
-		for (int i = shapesFromDad; i < dad.shapes.size(); i++)
-		{
-			shapes.add(dad.getShapes().get(i));
-		}
+//		int shapesFromMom = mom.shapes.size() / 2;
+//		int shapesFromDad = dad.shapes.size() / 2;
+//
+//		shapes = new ArrayList<ColoredShape>(shapesFromMom + shapesFromDad);
+//		for (int i = 0; i < shapesFromMom; i++)
+//		{
+//			shapes.add(mom.getShapes().get(i));
+//		}
+//		for (int i = shapesFromDad; i < dad.shapes.size(); i++)
+//		{
+//			shapes.add(dad.getShapes().get(i));
+//		}
+
+		for (int i=0;i<DNA_num;++i)
+			for (int j =0;j<DNA_length;++j)
+			{
+				if (Math.random()>0.5)
+				{
+					DNA[i][j]=mom.DNA[i][j];
+				}
+				else
+					DNA[i][j]=dad.DNA[i][j];
+			}
+
+
 		fitness = 0;
 	}
 
-	
+	public Individual(float[][] inDNA,int vote)
+	{
+		DNA = inDNA.clone();
+		fitness = vote;
+	}
+
+
+
+
 	private ColoredShape createRandomShape()
 	{
 		if (Math.random() < .75)
@@ -164,22 +186,22 @@ public class Individual implements Comparable<Individual>, Serializable
 	public void mutate()
 	{
 		// Mutate for Colorshap
-		if (Math.random() >= 0.8)
-		{
-			int number = (int) (Math.random() * shapes.size());
-			ColoredShape s = shapes.get(number);
-			double optionPicker = Math.random();
-			if (optionPicker < 0.5)
-			{
-				s.setColor(getRandomColor());
-			} else
-			{
-				shapes.remove(number);
-			}
-		} else
-		{
-			shapes.add(createRandomShape());
-		}
+//		if (Math.random() >= 0.8)
+//		{
+//			int number = (int) (Math.random() * shapes.size());
+//			ColoredShape s = shapes.get(number);
+//			double optionPicker = Math.random();
+//			if (optionPicker < 0.5)
+//			{
+//				s.setColor(getRandomColor());
+//			} else
+//			{
+//				shapes.remove(number);
+//			}
+//		} else
+//		{
+//			shapes.add(createRandomShape());
+//		}
 
 
 		// Mutate for DNA
@@ -286,13 +308,18 @@ public class Individual implements Comparable<Individual>, Serializable
 			}
 		}
 
-		//Save image 
-
+		//Save image
+		//imgURL=inimgURL;
 		try {
-			ImageIO.write(bImg,"PNG",new File("test_"+(int)(Math.random()*1024)+".png"));
+			ImageIO.write(bImg,"PNG",new File(imgURL));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setImgURL(String inURL)
+	{
+		imgURL = inURL;
 	}
 }

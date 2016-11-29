@@ -6,34 +6,50 @@ import java.io.*;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.io.*;
+import java.nio.channels.*;
 
 import org.junit.experimental.theories.Theories;
 
-public class GeneticAlgorithm extends JFrame {
+public class GeneticAlgorithm {
 
 	public static void main(String[] args) {
+		FileLock lck = null;
+		try {
+			lck = new FileOutputStream("mylock").getChannel().tryLock();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(lck == null) {
+			System.out.println("A previous instance is already running....");
+			System.exit(1);
+		}
+		System.out.println("This is the first instance of this program...");
+
+
 		GeneticAlgorithm alg = new GeneticAlgorithm();
 		//alg.setSize(800, 800);
 	//	alg.setVisible(true);
-        int firstRun = 1;
-        if (firstRun==1)
-		    alg.generatePopulation();
-        else
             //get individual from database
-
-		for (int generation = 0; generation < NUM_GENERATIONS; generation++) {
+		alg.getGenerationFromDatabase();
+		if (individuals.size()==0)
+			alg.generatePopulation();
+		else {
 			alg.makeNextGeneration();
+			System.out.println("GEt next");
 		}
+		alg.storeCurrentGenToDatabase();
+//		for (int generation = 0; generation < NUM_GENERATIONS; generation++) {
+//			alg.makeNextGeneration();
+//		}
+
 
 	}
-    static final String WRITE_OBJECT_SQL = "INSERT INTO genimage(idv_value) VALUES (?)";
+    static final String WRITE_OBJECT_SQL = "INSERT INTO genimage(imgURL,vote,generation,isshow,dna1,dna2,dna3,dna4,dna5,dna6) VALUES (?,?,?,?,?,?,?,?,?,?)";
     static final String READ_OBJECT_SQL = "SELECT * FROM genimage WHERE isshow=1";
 
 	private static final int NUM_GENERATIONS = 100;
@@ -43,45 +59,89 @@ public class GeneticAlgorithm extends JFrame {
     private int currentGeneration=0;
 
 	public GeneticAlgorithm() {
-//		JPanel jPanel = new JPanel();
-//		add(jPanel);
-//		NowDraw nowDraw = new NowDraw();
-//		add(nowDraw);
+		individuals = new ArrayList<Individual>();
 	}
 
-	class NowDraw extends JPanel {
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-
-
-
-		}
-	}
 
 
 	public void  storeCurrentGenToDatabase()
     {
+		currentGeneration++;
+		DataBaseUtil db = new DataBaseUtil();
+		float[][] dnaToStore;
+		String updateShow = "UPDATE genimage SET isshow=0 WHERE isshow=1";
+		db.executeSql(updateShow);
+
         for (int i=0;i<individuals.size();++i)
         {
-            individuals.get(i);
-        }
+
+			dnaToStore=individuals.get(i).DNA.clone();
+
+			try {
+
+				String imgURL = "src/genimages/G_"+currentGeneration+"_"+i+".png";
+				individuals.get(i).setImgURL(imgURL);
+				PreparedStatement preparedStatement = db.con.prepareStatement(WRITE_OBJECT_SQL);
+				preparedStatement.setString(1,individuals.get(i).imgURL);
+				preparedStatement.setInt(2,0);
+				preparedStatement.setInt(3,currentGeneration);
+				preparedStatement.setInt(4,1);
+				preparedStatement.setString(5,DataBaseUtil.floatArr2string(dnaToStore[0]));
+				preparedStatement.setString(6,DataBaseUtil.floatArr2string(dnaToStore[1]));
+				preparedStatement.setString(7,DataBaseUtil.floatArr2string(dnaToStore[2]));
+				preparedStatement.setString(8,DataBaseUtil.floatArr2string(dnaToStore[3]));
+				preparedStatement.setString(9,DataBaseUtil.floatArr2string(dnaToStore[4]));
+				preparedStatement.setString(10,DataBaseUtil.floatArr2string(dnaToStore[5]));
+				individuals.get(i).DrawIndividual();
+				preparedStatement.executeUpdate();
+				preparedStatement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		updateShow = "UPDATE genimage SET vote=0,generation="+currentGeneration+" WHERE imgURL='status'";
+		db.executeSql(updateShow);
+
+		db.disconnect();
+
+		System.out.println("Store Done");
     }
+
     public void getGenerationFromDatabase()
     {
         DataBaseUtil db = new DataBaseUtil();
+		currentGeneration =0;
 
         try{
-
             PreparedStatement preparedStatement = db.con.prepareStatement(READ_OBJECT_SQL);
             ResultSet rsResultSet = preparedStatement.executeQuery();
             while(rsResultSet.next())
             {
+				float [][]inDna = new float[10][1024];
+				int imgID = rsResultSet.getInt("id");
+				inDna[0]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna1")).clone();
+				inDna[1]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna2")).clone();
+				inDna[2]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna3")).clone();
+				inDna[3]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna4")).clone();
+				inDna[4]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna5")).clone();
+				inDna[5]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna6")).clone();
+//				inDna[6]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna7")).clone();
+//				inDna[7]=DataBaseUtil.string2floatArr(rsResultSet.getString("dna8")).clone();
+				int vote = rsResultSet.getInt("vote");
+				currentGeneration=rsResultSet.getInt("generation");
 
+				Individual idv = new Individual(inDna,vote);
+
+				individuals.add(idv);
             }
+			preparedStatement.close();
 
         }catch (Exception e) {
-            //logger.error("bytes2Msg error!", e);
-        }
+			//logger.error("bytes2Msg error!", e);
+		}
+		System.out.println("Get Done");
+        db.disconnect();
     }
 
 	void makeNextGeneration() {
@@ -90,7 +150,7 @@ public class GeneticAlgorithm extends JFrame {
 		// population
 
 		fillPopulation();
-		System.out.println(this);
+//		System.out.println(this);
 
 	}
 
@@ -117,15 +177,17 @@ public class GeneticAlgorithm extends JFrame {
 	}
 
 	private Individual pickRandomIndividual() {
-		int totalFitness = calculateTotalFitness();
-		int target = (int) (Math.random() * totalFitness);
-		int fitnessSoFar = individuals.get(0).getFitness();
-		int currentIndividual = 0;
-		while (fitnessSoFar < target) {
-			currentIndividual++;
-			fitnessSoFar = fitnessSoFar + individuals.get(currentIndividual).getFitness();
-		}
-		return individuals.get(currentIndividual);
+//
+//		int totalFitness = calculateTotalFitness();
+//		int target = (int) (Math.random() * totalFitness);
+//		int fitnessSoFar = individuals.get(0).getFitness();
+//		int currentIndividual = 0;
+//		while (fitnessSoFar < target) {
+//			currentIndividual++;
+//			fitnessSoFar = fitnessSoFar + individuals.get(currentIndividual).getFitness();
+//		}
+//		return individuals.get(currentIndividual);
+		return individuals.get((int)(Math.random()*individuals.size()));
 	}
 
 	private int calculateTotalFitness() {
