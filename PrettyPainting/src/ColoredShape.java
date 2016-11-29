@@ -1,7 +1,8 @@
 import java.awt.Color;
 import java.awt.Shape;
+import java.io.Serializable;
 
-public class ColoredShape
+public class ColoredShape implements Serializable
 {
 
 	private Color color;
