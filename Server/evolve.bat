@@ -1,2 +1,2 @@
 @echo off
-dir >src/2.txt
+java -jar PrettyPainting.jar
