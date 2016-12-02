@@ -19,10 +19,31 @@ public class GeneticAlgorithm {
 
 	public static void main(String[] args) {
 		FileLock lck = null;
+		FileChannel channel = null;
 		try {
-			lck = new FileOutputStream("mylock").getChannel().tryLock();
+			channel=new FileOutputStream("mylock").getChannel();
+			lck = channel.tryLock();
 		} catch (IOException e) {
 			e.printStackTrace();
+			if (lck != null) {
+				try {
+					lck.release();
+					lck = null;
+				} catch (IOException ee) {
+					ee.printStackTrace();
+				}
+			}
+
+			if (channel != null) {
+				try {
+					channel.close();
+					channel = null;
+				} catch (IOException ee) {
+					ee.printStackTrace();
+				}
+			}
+			System.out.println("Error");
+			System.exit(1);
 		}
 		if(lck == null) {
 			System.out.println("A previous instance is already running....");
@@ -32,23 +53,43 @@ public class GeneticAlgorithm {
 
 
 		GeneticAlgorithm alg = new GeneticAlgorithm();
-		//alg.setSize(800, 800);
-	//	alg.setVisible(true);
-            //get individual from database
+
+		//get individual from database
 		alg.getGenerationFromDatabase();
+
 		if (individuals.size()==0)
 			alg.generatePopulation();
+
 		else {
+			Collections.sort(individuals);
 			alg.makeNextGeneration();
-			System.out.println("GEt next");
+			System.out.println("Get next");
 		}
+		Collections.sort(individuals);
 		alg.storeCurrentGenToDatabase();
-//		for (int generation = 0; generation < NUM_GENERATIONS; generation++) {
-//			alg.makeNextGeneration();
-//		}
+
+
+		if (lck != null) {
+			try {
+				lck.release();
+				lck = null;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (channel != null) {
+			try {
+				channel.close();
+				channel = null;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 
 	}
+
     static final String WRITE_OBJECT_SQL = "INSERT INTO genimage(imgURL,vote,generation,isshow,dna1,dna2,dna3,dna4,dna5,dna6) VALUES (?,?,?,?,?,?,?,?,?,?)";
     static final String READ_OBJECT_SQL = "SELECT * FROM genimage WHERE isshow=1";
 
@@ -211,7 +252,7 @@ public class GeneticAlgorithm {
 			individuals.add(new Individual());
 		}
 		Collections.sort(individuals);
-		System.out.println(this);
+//		System.out.println(this);
 	}
 
 	public Individual getIndividual(int i) {
